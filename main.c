@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 
+int interpreter(char text[]);
+
 int list[10000];
 int ptr = 0;
-// list[ptr] is the content on the index the user is currently in.
 
 int main(int argc, char *argv[]) {
     for(int pos = 0; pos < sizeof(list); pos++) {
         list[pos] = 0;
     }
-    #pragma region terminalcommands
-    if(argc == 1) {
+    if(argc <= 1) {
         printf("ERROR: too many few arguments");
         return 1;
     }
@@ -20,26 +20,49 @@ int main(int argc, char *argv[]) {
             while(1 == 1) {
                 printf("brainfuck > ");
                 scanf("%s", &text);
-                printf(interpreter(text));
+                int result = interpreter(text);
+                printf("%i", result);
             };
         }
         else {
             printf("ERROR: unknown option");
         };
     };
-    #pragma endregion terminalcommands
     return 0;
 }
 
 int interpreter(char text[]) {
     if(!strcmp(text, "quit")) {
         printf("quiting program...");
-        return -1;
+        return 1;
     };
     for(int i = 0; i < sizeof(strlen(text)); i++) {
         if(text[i] == '+') {
             list[ptr]++;
+            return list[ptr];
+        }
+        if(text[i] == '-') {
+            list[ptr]--;
+            return list[ptr];
+        }
+        if(text[i] == '>') {
+            ptr += 1; 
+            return list[ptr];
+        }
+        if(text[i] == '<') {
+            ptr -= 1;
+            return list[ptr];
+        }
+        if(text[i] == ',') {
+            char ch;
+            printf("type a char: ");
+            scanf("%c", ch);
+            list[ptr] += (int)ch;
+            return list[ptr];
+        }
+        if(text[i] == '.') {
+            printf("%i", list[ptr]);
+            return list[ptr];
         }
     }
-    return list[ptr];
 };
